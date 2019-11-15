@@ -1,0 +1,36 @@
+<script src="lib/main.js"></script>
+<script>
+
+console.log("Stack #2");
+console.log(`Error
+    at printWithStackTrace (webpack:///./src/utils.js:4)
+    at eval (webpack:///./src/index.js:5)`);
+
+console.log("Stack #3");
+console.log(`Error
+    at printWithStackTrace (webpack:///src/utils.js:4)
+    at eval (webpack:///src/index.js:5)`);
+
+</script>
+
+<h1>Issue 1011729</h1>
+<h2>Source map URLs are not normalized to remove '.' and '..' directories</h2> 
+
+<p>
+Open the DevTools console (F12).
+You will see three stack traces.
+
+<ol>
+
+    <li>The first stack trace is a direct printout of the <tt>Error.stack</tt> property.
+    Hyperlinks are clickable and open the correct source-mapped file</li>
+
+    <li>The second stack trace is obtained by printing the first two lines of the fixed string that 
+    <tt>Error.stack</tt> would produce. The string is "magically" recognized and the URLs are linked and work correctly.</li>
+
+    <li>The third stack trace is identical to the second, except for the fact that redundant dots in the URLs
+    are removed. The URLs are still hyper-linked, but they <b>no longer open the correct file</b>. Also, they URLs are not
+    shortened to just the file name, because the entire string is no longer "magically" recognized as a valid stack trace.</li>
+
+</ol>
+</p>
